@@ -150,6 +150,16 @@ export class AdminDevModeActivitiesTabComponent implements OnInit {
   }
 
   generateDummyExplorations(): void {
+    // Add max limit validation
+    if (this.numDummyExpsToGenerate > 500) {
+      this.setStatusMessage.emit(
+        'Cannot generate more than 500 dummy explorations at once. ' +
+          `Requested: ${this.numDummyExpsToGenerate}. ` +
+          'Please try generating explorations in smaller batches.'
+      );
+      return;
+    }
+
     // Generate dummy explorations with random title.
     if (this.numDummyExpsToPublish > this.numDummyExpsToGenerate) {
       this.setStatusMessage.emit(
@@ -157,6 +167,7 @@ export class AdminDevModeActivitiesTabComponent implements OnInit {
       );
       return;
     }
+
     this.adminTaskManagerService.startTask();
     this.setStatusMessage.emit('Processing...');
     this.adminBackendApiService
@@ -172,10 +183,14 @@ export class AdminDevModeActivitiesTabComponent implements OnInit {
           );
         },
         errorResponse => {
-          this.setStatusMessage.emit('Server error: ' + errorResponse);
+          this.setStatusMessage.emit(
+            errorResponse.error || 'Failed to generate dummy explorations.'
+          );
         }
-      );
-    this.adminTaskManagerService.finishTask();
+      )
+      .finally(() => {
+        this.adminTaskManagerService.finishTask();
+      });
   }
 
   generateDummyTranslationOpportunities(): void {
