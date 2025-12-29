@@ -183,9 +183,7 @@ export class AdminDevModeActivitiesTabComponent implements OnInit {
           );
         },
         errorResponse => {
-          this.setStatusMessage.emit(
-            errorResponse.error || 'Failed to generate dummy explorations.'
-          );
+          this.setStatusMessage.emit('Server error: ' + errorResponse);
         }
       )
       .finally(() => {
