@@ -1387,6 +1387,9 @@ class AdminHandler(
                     failed_count,
                 )
             )
+            # Raise exception if no explorations were created.
+            if created_count == 0:
+                raise Exception('Dummy explorations not generated.')
         else:
             raise Exception('Cannot generate dummy explorations in production.')
 
