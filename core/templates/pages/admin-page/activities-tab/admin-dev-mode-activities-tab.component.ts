@@ -150,7 +150,7 @@ export class AdminDevModeActivitiesTabComponent implements OnInit {
   }
 
   generateDummyExplorations(): void {
-    // Add max limit validation
+    // Add max limit validation.
     if (this.numDummyExpsToGenerate > 500) {
       this.setStatusMessage.emit(
         'Cannot generate more than 500 dummy explorations at once. ' +

@@ -1274,7 +1274,7 @@ class AdminHandler(
         """
         assert self.user_id is not None
 
-        # Add max limit validation
+        # Add max limit validation.
         if num_dummy_exps_to_generate > MAX_DUMMY_EXPLORATIONS:
             raise Exception(
                 f'Cannot generate more than {MAX_DUMMY_EXPLORATIONS} dummy '
@@ -1300,7 +1300,7 @@ class AdminHandler(
             failed_count = 0
             published_count = 0
 
-            # Process in batches to prevent Redis connection pool exhaustion
+            # Process in batches to prevent Redis connection pool exhaustion.
             for batch_start in range(0, num_dummy_exps_to_generate, BATCH_SIZE):
                 batch_end = min(
                     batch_start + BATCH_SIZE, num_dummy_exps_to_generate
@@ -1310,7 +1310,7 @@ class AdminHandler(
                     % (batch_start + 1, batch_end, num_dummy_exps_to_generate)
                 )
 
-                # Create explorations for this batch
+                # Create explorations for this batch.
                 for i in range(batch_start, batch_end):
                     try:
                         title = random.choice(possible_titles)
@@ -1333,7 +1333,7 @@ class AdminHandler(
                         )
                         created_count += 1
 
-                        # Publish if we haven't reached the publish limit
+                        # Publish if we haven't reached the publish limit.
                         if published_count < num_dummy_exps_to_publish:
                             try:
                                 rights_manager.publish_exploration(
@@ -1357,11 +1357,12 @@ class AdminHandler(
                         )
                         continue
 
-                # Small delay between batches to prevent overwhelming Redis
+                # Small delay between batches to prevent overwhelming Redis.
                 if batch_end < num_dummy_exps_to_generate:
-                    time.sleep(0.05)  # 50ms delay
+                    # 50ms delay.
+                    time.sleep(0.05)
 
-            # Index published explorations
+            # Index published explorations.
             if exploration_ids_to_publish:
                 try:
                     exp_services.index_explorations_given_ids(
@@ -1374,7 +1375,7 @@ class AdminHandler(
                 except Exception:
                     logging.exception('[ADMIN] Failed to index explorations')
 
-            # Final summary
+            # Final summary.
             logging.info(
                 '[ADMIN] Exploration generation complete. '
                 'Created: %d/%d, Published: %d/%d, Failed: %d'
